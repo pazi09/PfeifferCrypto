@@ -1,28 +1,32 @@
 from re import findall
+
 cryptMode = input("[E]ncrypt|[D]ecrypt: ").upper()
-if cryptMode not in ['E','D']:
-    print("Error: mode is not Found!"); raise SystemExit
+if cryptMode not in ['E', 'D']:
+    print("Error: mode is not Found!");
+    raise SystemExit
 startMessage = list(input("Write the message: ").upper())
-matrixKey = [
-    ['S','O','M','E','T'],
-    ['H','I','N','G','A'],
-    ['B','C','D','F','K'],
-    ['L','P','Q','R','U'],
-    ['V','W','X','Y','Z']
-]; addSymbol = 'X'
+
+with open('matrixKey.txt', 'r') as file:
+    matrixKey = file.readlines()
+matrixKey = [[str(n) for n in x.split()] for x in matrixKey]
+addSymbol = 'X'
+
+
 def regular(text):
     template = r"[A-Z]{2}"
     return findall(template, text)
+
+
 def encryptDecrypt(mode, message, final = ""):
     if mode == 'E':
         for symbol in message:
-            if symbol not in [chr(x) for x in range(65,91)]:
+            if symbol not in [chr(x) for x in range(65, 91)]:
                 message.remove(symbol)
         for index in range(len(message)):
             if message[index] == 'J': message[index] = 'I'
-        for index in range(1,len(message)):
+        for index in range(1, len(message)):
             if message[index] == message[index - 1]:
-                message.insert(index,addSymbol)
+                message.insert(index, addSymbol)
         if len(message) % 2 != 0:
             message.append(addSymbol)
 
@@ -45,7 +49,7 @@ def encryptDecrypt(mode, message, final = ""):
                     x0 = x0 - 1 if x0 != 0 else 4
                     x1 = x1 - 1 if x1 != 0 else 4
 
-        y0,y1 = y1,y0
+        y0, y1 = y1, y0
         binaryList[binary][0] = matrixKey[y0][x0]
         binaryList[binary][1] = matrixKey[y1][x1]
     for binary in range(len(binaryList)):
@@ -53,4 +57,5 @@ def encryptDecrypt(mode, message, final = ""):
             final += symbol
     return final
 
-print("Final message:",encryptDecrypt(cryptMode, startMessage))
+
+print("Final message:", encryptDecrypt(cryptMode, startMessage))
