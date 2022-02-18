@@ -4,7 +4,9 @@ cryptMode = input("[E]ncrypt|[D]ecrypt: ").upper()
 if cryptMode not in ['E', 'D']:
     print("Error: mode is not Found!");
     raise SystemExit
-startMessage = list(input("Write the message: ").upper())
+# startMessage = list(input("Write the message: ").upper())
+path = str(input('Input path to the input file: '))
+startMessage = list(open(path, 'r').read().upper())
 
 with open('matrixKey.txt', 'r') as file:
     matrixKey = file.readlines()
@@ -59,3 +61,5 @@ def encryptDecrypt(mode, message, final = ""):
 
 
 print("Final message:", encryptDecrypt(cryptMode, startMessage))
+open('result.txt', 'w').write(encryptDecrypt(cryptMode, startMessage))
+
